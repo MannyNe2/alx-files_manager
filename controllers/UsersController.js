@@ -1,11 +1,10 @@
-/* eslint-disable import/no-named-as-default */
 import { ObjectId } from 'mongodb';
 import sha1 from 'sha1';
-//import Queue from 'bull';
+import Queue from 'bull';
 import dbClient from '../utils/db';
 import userUtils from '../utils/user';
 
-//const userQueue = new Queue('userQueue');
+const userQueue = new Queue('userQueue');
 
 class UsersController {
   /**
@@ -45,7 +44,7 @@ class UsersController {
         password: sha1Password,
       });
     } catch (err) {
-      //await userQueue.add({});
+      await userQueue.add({});
       return response.status(500).send({ error: 'Error creating user.' });
     }
 
@@ -54,9 +53,9 @@ class UsersController {
       email,
     };
 
-    //await userQueue.add({
-    //  userId: result.insertedId.toString(),
-    //});
+    await userQueue.add({
+      userId: result.insertedId.toString(),
+    });
 
     return response.status(201).send(user);
   }
